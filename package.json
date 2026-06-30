@@ -1,0 +1,30 @@
+{
+  "name": "fakestore-api-automation",
+  "version": "1.0.0",
+  "description": "Production-ready API automation framework for FakeStore API using Playwright and TypeScript",
+  "scripts": {
+    "test": "playwright test",
+    "test:auth": "playwright test tests/auth",
+    "test:cart": "playwright test tests/cart",
+    "test:product": "playwright test tests/product",
+    "test:headed": "playwright test --headed",
+    "test:report": "playwright show-report",
+    "test:update-snapshots": "playwright test --update-snapshots"
+  },
+  "keywords": [
+    "playwright",
+    "api-testing",
+    "typescript",
+    "fakestore"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@types/node": "^22.10.0",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "dotenv": "^16.4.7",
+    "typescript": "^5.7.2"
+  }
+}
