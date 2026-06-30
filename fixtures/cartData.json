@@ -1,0 +1,33 @@
+{
+  "validCart": {
+    "userId": 1,
+    "date": "2024-01-15",
+    "products": [
+      { "productId": 1, "quantity": 2 },
+      { "productId": 3, "quantity": 1 }
+    ]
+  },
+  "updatedCart": {
+    "userId": 1,
+    "date": "2024-06-30",
+    "products": [
+      { "productId": 2, "quantity": 3 },
+      { "productId": 5, "quantity": 1 }
+    ]
+  },
+  "invalidPayload": {
+    "userId": "not-a-number",
+    "products": "invalid"
+  },
+  "missingRequiredFields": {
+    "date": "2024-01-15"
+  },
+  "wrongDataTypes": {
+    "userId": "abc",
+    "products": "not-an-array"
+  },
+  "emptyProducts": {
+    "userId": 1,
+    "products": []
+  }
+}
