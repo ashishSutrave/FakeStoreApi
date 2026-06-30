@@ -1,7 +1,7 @@
 import path from 'path';
 
 export const CLOUDFLARE_STORAGE_PATH = path.join(
-  __dirname,
+  process.cwd(),
   'playwright',
   '.auth',
   'cloudflare.json'
