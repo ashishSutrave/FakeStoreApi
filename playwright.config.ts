@@ -1,12 +1,11 @@
 import { defineConfig } from '@playwright/test';
 import dotenv from 'dotenv';
-import path from 'path';
+import { CLOUDFLARE_STORAGE_PATH } from './constants/storage';
 import { CHROME_USER_AGENT, getBrowserHeaders } from './utils/browserHeaders';
 
 dotenv.config({ override: true });
 
 const baseURL = (process.env.BASE_URL || 'https://fakestoreapi.com').replace(/\/$/, '');
-const cloudflareStoragePath = path.join(__dirname, 'playwright', '.auth', 'cloudflare.json');
 
 const workers = process.env.WORKERS
   ? Number(process.env.WORKERS)
@@ -37,7 +36,7 @@ export default defineConfig({
   use: {
     baseURL,
     userAgent: CHROME_USER_AGENT,
-    storageState: cloudflareStoragePath,
+    storageState: CLOUDFLARE_STORAGE_PATH,
     extraHTTPHeaders: getBrowserHeaders(baseURL),
     trace: 'on-first-retry',
   },
