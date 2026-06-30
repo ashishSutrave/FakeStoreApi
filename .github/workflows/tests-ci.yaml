@@ -35,6 +35,8 @@ jobs:
           BASE_URL: https://fakestoreapi.com
           API_USERNAME: ${{ vars.API_USERNAME }}
           API_PASSWORD: ${{ secrets.API_PASSWORD }}
+          WORKERS: 1
+          MAX_RESPONSE_TIME_MS: 10000
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
