@@ -5,5 +5,6 @@ test-results/
 allure-results/
 allure-report/
 .env
+playwright/.auth/
 *.log
 .DS_Store
