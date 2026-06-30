@@ -1,15 +1,21 @@
 import { defineConfig } from '@playwright/test';
 import dotenv from 'dotenv';
+import path from 'path';
+import { CHROME_USER_AGENT, getBrowserHeaders } from './utils/browserHeaders';
 
 dotenv.config({ override: true });
+
+const baseURL = (process.env.BASE_URL || 'https://fakestoreapi.com').replace(/\/$/, '');
+const cloudflareStoragePath = path.join(__dirname, 'playwright', '.auth', 'cloudflare.json');
 
 const workers = process.env.WORKERS
   ? Number(process.env.WORKERS)
   : process.env.CI
-    ? 2
+    ? 1
     : undefined;
 
 export default defineConfig({
+  globalSetup: require.resolve('./global-setup'),
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -29,11 +35,10 @@ export default defineConfig({
     ['json', { outputFile: 'test-results/results.json' }],
   ],
   use: {
-    baseURL: process.env.BASE_URL || 'https://fakestoreapi.com',
-    extraHTTPHeaders: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
+    baseURL,
+    userAgent: CHROME_USER_AGENT,
+    storageState: cloudflareStoragePath,
+    extraHTTPHeaders: getBrowserHeaders(baseURL),
     trace: 'on-first-retry',
   },
   projects: [
