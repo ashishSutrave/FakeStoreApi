@@ -2,6 +2,7 @@ import { APIRequestContext, APIResponse } from '@playwright/test';
 import { expect } from '@playwright/test';
 import { getBaseUrl } from '../constants/endpoints';
 import { ApiResponse, RequestOptions } from '../types/api.types';
+import { getBrowserHeaders } from './browserHeaders';
 import { logger } from './logger';
 
 export const STRICT_RESPONSE_TIME_MS = Number(process.env.STRICT_RESPONSE_TIME_MS) || 2000;
@@ -20,8 +21,7 @@ export class ApiHelper {
   ): Promise<ApiResponse> {
     const url = this.buildUrl(endpoint);
     const headers = {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
+      ...getBrowserHeaders(getBaseUrl()),
       ...options.headers,
     };
 
