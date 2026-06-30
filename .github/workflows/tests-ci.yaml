@@ -30,7 +30,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright API tests
-        run: npm test
+        run: xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' npm test
         env:
           BASE_URL: https://fakestoreapi.com
           API_USERNAME: ${{ vars.API_USERNAME }}
