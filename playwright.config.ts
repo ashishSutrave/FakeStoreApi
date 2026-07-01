@@ -1,6 +1,5 @@
 import { defineConfig } from '@playwright/test';
 import dotenv from 'dotenv';
-import { CLOUDFLARE_STORAGE_PATH } from './constants/storage';
 import { CHROME_USER_AGENT, getBrowserHeaders } from './utils/browserHeaders';
 
 dotenv.config({ override: true });
@@ -14,7 +13,6 @@ const workers = process.env.WORKERS
     : undefined;
 
 export default defineConfig({
-  globalSetup: require.resolve('./global-setup'),
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -36,7 +34,6 @@ export default defineConfig({
   use: {
     baseURL,
     userAgent: CHROME_USER_AGENT,
-    storageState: CLOUDFLARE_STORAGE_PATH,
     extraHTTPHeaders: getBrowserHeaders(baseURL),
     trace: 'on-first-retry',
   },
