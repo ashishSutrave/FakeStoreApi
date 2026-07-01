@@ -2,13 +2,25 @@ import { APIRequestContext, APIResponse } from '@playwright/test';
 import { expect } from '@playwright/test';
 import { getBaseUrl } from '../constants/endpoints';
 import { ApiResponse, RequestOptions } from '../types/api.types';
-import { getBrowserHeaders } from './browserHeaders';
+import { isMockApiEnabled } from './isMockApi';
+import { executeMockRequest } from './mockApiRouter';
 import { logger } from './logger';
+
+export const BROWSER_USER_AGENT =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
 export const STRICT_RESPONSE_TIME_MS = Number(process.env.STRICT_RESPONSE_TIME_MS) || 2000;
 export const MAX_RESPONSE_TIME_MS = Number(process.env.MAX_RESPONSE_TIME_MS) || 5000;
 
 export class ApiHelper {
+  static getDefaultHeaders(): Record<string, string> {
+    return {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'User-Agent': BROWSER_USER_AGENT,
+    };
+  }
+
   static buildUrl(endpoint: string): string {
     return `${getBaseUrl()}${endpoint}`;
   }
@@ -21,13 +33,33 @@ export class ApiHelper {
   ): Promise<ApiResponse> {
     const url = this.buildUrl(endpoint);
     const headers = {
-      ...getBrowserHeaders(getBaseUrl()),
+      ...ApiHelper.getDefaultHeaders(),
       ...options.headers,
     };
 
     logger.logRequest(method, url, headers, options.data);
 
     const startTime = Date.now();
+
+    if (isMockApiEnabled()) {
+      const mockResponse = executeMockRequest(method, endpoint, {
+        ...options,
+        headers,
+      });
+      const responseTimeMs = Date.now() - startTime;
+
+      logger.logResponse(url, mockResponse.status, responseTimeMs, mockResponse.body, {
+        'content-type': 'application/json',
+      });
+
+      return {
+        status: mockResponse.status,
+        body: mockResponse.body,
+        headers: { 'content-type': 'application/json' },
+        responseTimeMs,
+      };
+    }
+
     let response: APIResponse;
 
     try {
