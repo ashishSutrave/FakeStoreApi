@@ -1,4 +1,4 @@
-Dexport const CHROME_USER_AGENT =
+export const CHROME_USER_AGENT =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
 export function getBrowserHeaders(baseUrl: string): Record<string, string> {
