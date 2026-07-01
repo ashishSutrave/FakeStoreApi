@@ -1,22 +1,9 @@
-import { APIRequestContext, Browser, test as base } from '@playwright/test';
+import { test as base } from '@playwright/test';
 import { AuthApi } from '../api/AuthApi';
 import { CartApi } from '../api/CartApi';
 import { ProductApi } from '../api/ProductApi';
-import { getBaseUrl } from '../constants/endpoints';
-import { CHROME_USER_AGENT, getBrowserHeaders } from '../utils/browserHeaders';
-import { createCloudflareAwareRequest } from '../utils/cloudflareWarmup';
-
-type CloudflareSession = {
-  browser: Browser;
-  request: APIRequestContext;
-};
-
-type WorkerFixtures = {
-  cloudflareSession: CloudflareSession | null;
-};
 
 type ApiFixtures = {
-  apiRequest: APIRequestContext;
   authApi: AuthApi;
   cartApi: CartApi;
   productApi: ProductApi;
@@ -24,62 +11,31 @@ type ApiFixtures = {
   authenticatedProductApi: ProductApi;
 };
 
-export const test = base.extend<ApiFixtures, WorkerFixtures>({
-  cloudflareSession: [
-    async ({ playwright: _playwright }, use) => {
-      if (!process.env.CI) {
-        await use(null);
-        return;
-      }
-
-      const origin = getBaseUrl();
-      const session = await createCloudflareAwareRequest(origin);
-      await use(session);
-      await session.browser.close();
-    },
-    { scope: 'worker' },
-  ],
-
-  apiRequest: async ({ playwright, cloudflareSession }, use) => {
-    if (cloudflareSession) {
-      await use(cloudflareSession.request);
-      return;
-    }
-
-    const origin = getBaseUrl();
-    const apiContext = await playwright.request.newContext({
-      baseURL: origin,
-      userAgent: CHROME_USER_AGENT,
-      extraHTTPHeaders: getBrowserHeaders(origin),
-    });
-    await use(apiContext);
-    await apiContext.dispose();
+export const test = base.extend<ApiFixtures>({
+  authApi: async ({ request }, use) => {
+    await use(new AuthApi(request));
   },
 
-  authApi: async ({ apiRequest }, use) => {
-    await use(new AuthApi(apiRequest));
+  cartApi: async ({ request }, use) => {
+    await use(new CartApi(request));
   },
 
-  cartApi: async ({ apiRequest }, use) => {
-    await use(new CartApi(apiRequest));
+  productApi: async ({ request }, use) => {
+    await use(new ProductApi(request));
   },
 
-  productApi: async ({ apiRequest }, use) => {
-    await use(new ProductApi(apiRequest));
-  },
-
-  authenticatedCartApi: async ({ apiRequest, authApi }, use) => {
+  authenticatedCartApi: async ({ request, authApi }, use) => {
     const response = await authApi.loginWithEnvCredentials();
-    const cartApi = new CartApi(apiRequest);
+    const cartApi = new CartApi(request);
     if (response.body?.token) {
       cartApi.setAuthToken(response.body.token);
     }
     await use(cartApi);
   },
 
-  authenticatedProductApi: async ({ apiRequest, authApi }, use) => {
+  authenticatedProductApi: async ({ request, authApi }, use) => {
     const response = await authApi.loginWithEnvCredentials();
-    const productApi = new ProductApi(apiRequest);
+    const productApi = new ProductApi(request);
     if (response.body?.token) {
       productApi.setAuthToken(response.body.token);
     }
