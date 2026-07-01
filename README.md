@@ -88,8 +88,8 @@ utils/        → apiHelper, mockApiRouter, logger, schemaValidator
 ## Extension Plan
 
 
-Allure reporting, test tagging (`@smoke` / `@regression`), Docker for consistent environments
-Users API coverage, Faker.js test data factories, OpenAPI spec validation
-Self-hosted CI runner for live API in pipeline, k6 performance tests, Slack/CI notifications
+- Allure reporting, test tagging (`@smoke` / `@regression`), Docker for consistent environments
+- Users API coverage, Faker.js test data factories, OpenAPI spec validation
+- Self-hosted CI runner for live API in pipeline, k6 performance tests, Slack/CI notifications
 
 
