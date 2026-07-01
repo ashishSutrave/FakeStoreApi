@@ -4,6 +4,8 @@
   "description": "Production-ready API automation framework for FakeStore API using Playwright and TypeScript",
   "scripts": {
     "test": "playwright test",
+    "test:mock": "node scripts/run-mock-tests.mjs",
+    "test:live": "node scripts/run-live-tests.mjs",
     "test:auth": "playwright test tests/auth",
     "test:cart": "playwright test tests/cart",
     "test:product": "playwright test tests/product",
