@@ -1,13 +1,13 @@
 import { APIRequestContext, APIResponse } from '@playwright/test';
 import { expect } from '@playwright/test';
 import { getBaseUrl } from '../constants/endpoints';
+import { BROWSER_USER_AGENT } from '../constants/http';
 import { ApiResponse, RequestOptions } from '../types/api.types';
 import { isMockApiEnabled } from './isMockApi';
 import { executeMockRequest } from './mockApiRouter';
 import { logger } from './logger';
 
-export const BROWSER_USER_AGENT =
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+export { BROWSER_USER_AGENT } from '../constants/http';
 
 export const STRICT_RESPONSE_TIME_MS = Number(process.env.STRICT_RESPONSE_TIME_MS) || 2000;
 export const MAX_RESPONSE_TIME_MS = Number(process.env.MAX_RESPONSE_TIME_MS) || 5000;
