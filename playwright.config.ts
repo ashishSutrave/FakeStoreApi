@@ -1,6 +1,6 @@
 import { defineConfig } from '@playwright/test';
 import dotenv from 'dotenv';
-import { CHROME_USER_AGENT, getBrowserHeaders } from './utils/browserHeaders';
+import { BROWSER_USER_AGENT } from './constants/http';
 
 dotenv.config({ override: true });
 
@@ -33,8 +33,11 @@ export default defineConfig({
   ],
   use: {
     baseURL,
-    userAgent: CHROME_USER_AGENT,
-    extraHTTPHeaders: getBrowserHeaders(baseURL),
+    userAgent: BROWSER_USER_AGENT,
+    extraHTTPHeaders: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
     trace: 'on-first-retry',
   },
   projects: [
